@@ -1,5 +1,6 @@
 #include <Wire.h>
 
+//define needed variables
 #define MPU_ADDRESS 0x68
 #define PWR_MGMT_1 0x6B
 #define GYRO_CONFIG 0x1B
@@ -13,9 +14,9 @@ int c = 0;
 void setup() 
 {
   Serial.begin(19200);
-  MPU_init();
-  MPU_GyroConfig();
-  calc_MPU_error();
+  MPU_init(); //to start MPU
+  MPU_GyroConfig(); //configure the mpu gyroscope
+  calc_MPU_error(); //calculate the error/offset
   delay(20);
 }
 
@@ -23,14 +24,14 @@ void loop()
 {
   prevTime = currTime;
   currTime = millis();
-  elapsedTime = (currTime - prevTime) / 1000;
+  elapsedTime = (currTime - prevTime) / 1000; // calculating elapsed time in seconds
 
   GyroZ = MPU_reading() / LSB_Sensitivity;
-  
+  //adding error/offset
   GyroZ += GyroErrorZ;
 
+  //calculating the yaw
   yaw = yaw + GyroZ * elapsedTime; 
-
   Serial.print("yaw: ");
   Serial.println(yaw);
 
@@ -60,9 +61,9 @@ int16_t MPU_reading()
   Wire.beginTransmission(MPU_ADDRESS);
   Wire.write(REGISTER_ADDRESS);
   Wire.endTransmission(false);
-  Wire.requestFrom(MPU_ADDRESS, 2);
+  Wire.requestFrom(MPU_ADDRESS, 2);   //read 2 bytes
 
-  while(Wire.available()<2);
+  while(Wire.available()<2);  //wait untill receiving 2 bytes
   data = Wire.read() << 8 | Wire.read();
 
   return data;

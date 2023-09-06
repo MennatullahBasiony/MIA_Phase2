@@ -2,21 +2,19 @@
 #define PIN_ENCODER_B 3
 
 long long counter = 0;
-
-
+float xn1 = 0;
+float yn1 = 0;
+int k = 0;
 
 void setup() 
 {
   pinMode(PIN_ENCODER_A, INPUT_PULLUP);
   pinMode(PIN_ENCODER_B, INPUT_PULLUP);
-  
+
+  //attach interrupt routines to its pins
   attachInterrupt(PIN_ENCODER_A, ISR_encoderPinA, CHANGE);
   attachInterrupt(PIN_ENCODER_B, ISR_encoderPinB, CHANGE);
 }
-
-float xn1 = 0;
-float yn1 = 0;
-int k = 0;
 
 void loop() 
 {
